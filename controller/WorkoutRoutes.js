@@ -1,14 +1,12 @@
 const routes = require("express").Router();
 const WorkoutModel = require("../model/WorkoutSchema");
 
-//post request
 async function create_Exercise(req, res) {
   if (!req.body) return res.status(400).json("Post HTTP data not provided");
-  // console.log(req.body);
-  const { userID, name, amount, duration, date } = req.body; // Make sure the user ID is sent from the frontend
+  const { userID, name, amount, duration, date } = req.body;
 
   const Create = new WorkoutModel({
-    user_id: userID, // Set the user field with the user's ID
+    user_id: userID,
     name: name,
     amount: amount,
     duration: duration,
@@ -29,20 +27,6 @@ async function get_Exercise(req, res) {
   return res.json(data);
 }
 
-//delete request
-
-// async function delete_Exercise(req, res) {
-//   if (!req.body) res.status(400).json({ message: "Request body not Found" });
-//   await WorkoutModel.deleteOne(req.body, function (err) {
-//     if (!err) res.json("Record Deleted...!");
-//   })
-//     .clone()
-//     .catch(function (err) {
-//       res.json("Error while deleting Transaction Record");
-//     });
-// }
-
-// update request
 async function update_Exercise(req, res) {
   const { name, amount, duration, date } = req.body;
   const itemId = req.params.id;
@@ -65,8 +49,6 @@ async function update_Exercise(req, res) {
 }
 
 routes.route("/api/addExercise").post(create_Exercise).get(get_Exercise);
-
-// routes.route("/api/addCalorie/:id").delete(delete_Exercise);
 
 routes.route("/api/updateExercise/:id").put(update_Exercise);
 
