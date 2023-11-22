@@ -75,7 +75,7 @@ router.get("/retrieve_data/:id", (req, res, next) => {
     } else {
       return res.json(data);
     }
-  }).select("-password");
+  }).select("password");
 });
 
 router.get("/retrieve_password/:id", (req, res, next) => {
