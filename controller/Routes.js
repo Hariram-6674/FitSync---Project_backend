@@ -16,14 +16,16 @@ router.get("/", (req, res, next) => {
 router.post("/send-email", async (req, res) => {
   const { name, email, message } = req.body;
 
+  // Set up email options
   const mailOptions = {
-    from: "fitsync.react@outlook.com", 
-    to: "fitsync.react@outlook.com", 
+    from: "fitsync.react@outlook.com", // Sender's email (optional, can be set to the user's email)
+    to: "fitsync.react@outlook.com", // Your email address (where you want to receive form submissions)
     subject: "New Contact Form Submission",
     text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
   };
 
   try {
+    // Send the email
     await transporter.sendMail(mailOptions);
     res.status(200).send("Email sent successfully!");
   } catch (error) {
@@ -90,6 +92,7 @@ router.get("/retrieve_password/:id", (req, res, next) => {
 
 router.post("/updateUser", async (req, res) => {
   try {
+    console.log("one");
     await LoginSchema.updateOne(
       { _id: req.body.user },
       {
@@ -138,6 +141,7 @@ router.post("/updatePassword", async (req, res) => {
 });
 
 router.post("/login", (req, res) => {
+  console.log(req.body);
   const { email, password } = req.body;
   LoginSchema.findOne({ email: email }).then((record) => {
     if (record) {
@@ -153,6 +157,7 @@ router.post("/login", (req, res) => {
   });
 });
 
+//this is being used for the leaderboard so do not remove!!!
 router.get("/login/:user_id", (req, res) => {
   const { user_id } = req.params;
   LoginSchema.findOne({ _id: user_id }, "name").then((user) => {
@@ -168,10 +173,13 @@ router.post("/email/forgot_password", async (req, res) => {
   try {
     const { email } = req.body;
     const { password } = req.body;
+    // console.log(req.body);
 
+    // Assuming LoginSchema is a model from a database, you might want to check if the user exists
     const user = await LoginSchema.findOne({ email });
 
     if (!user) {
+      // return res.status(404).json({ error: "User not found" });
     } else {
       const request_2 = await LoginSchema.updateOne(
         { _id: user },
@@ -191,17 +199,32 @@ router.post("/email/forgot_password", async (req, res) => {
 
       transporter.sendMail(mailOptions, (error, isnfo) => {
         if (error) {
+          // console.error(error);
           return res.status(500).json({ error: "Failed to send email" });
         }
         console.log("Email sent: " + info.response);
         res.json({ success: true });
       });
+
+      // return res.json(request_2);
     }
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+// router.post("/login", (req, res) => {
+//   console.log(req.body);
+//   const { email, password } = req.body;
+//   LoginSchema.findOne({ email: email, password: password }).then((record) => {
+//     if (record) {
+//       res.json(record.id);
+//     } else {
+//       res.json("Login Incorrect");
+//     }
+//   });
+// });
 
 router.post("/check_email", async (req, res) => {
   try {
@@ -221,6 +244,7 @@ router.post("/check_email", async (req, res) => {
 router.post("/updateBmiData", async (req, res) => {
   const { updated_labels, updated_data, user } = req.body;
   try {
+    console.log("one");
     await Schema.updateOne(
       { _id: user },
       {
@@ -240,6 +264,7 @@ router.post("/updateBmiData", async (req, res) => {
 router.post("/updatefatData", async (req, res) => {
   const { updated_labels, updated_data, user } = req.body;
   try {
+    console.log("one");
     await Schema.updateOne(
       { _id: user },
       {
@@ -259,6 +284,7 @@ router.post("/updatefatData", async (req, res) => {
 router.post("/updateweightData", async (req, res) => {
   const { updated_labels, updated_data, user } = req.body;
   try {
+    console.log("one");
     await Schema.updateOne(
       { _id: user },
       {
